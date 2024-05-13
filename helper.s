@@ -14,7 +14,7 @@ screen_mode := $FF5F
 .importzp ptr1, ptr2, ptr3, ptr4
 .importzp sreg
 
-DEFAULT_COLOR := $61
+.import _default_color
 
 .export _deck
 _deck := $9000
@@ -74,7 +74,7 @@ _clear_screen:
 	:
 	lda #$20
 	sta $9F23
-	lda #DEFAULT_COLOR
+	lda _default_color
 	sta $9F23
 	
 	inx
@@ -87,6 +87,28 @@ _clear_screen:
 	iny
 	cpy #SCREEN_HEIGHT
 	bcc :--
+	rts
+
+.export _set_bg_screen
+_set_bg_screen:
+	lda #$20
+	sta $9F22
+	
+	stz $9F21
+	ldy #SCREEN_HEIGHT
+	:
+	ldx #SCREEN_WIDTH
+	lda #1
+	sta $9F20
+	lda _default_color
+	:
+	sta $9F23
+	dex
+	bne :-
+	
+	inc $9F21
+	dey
+	bne :--
 	rts
 
 .export _enable_mouse

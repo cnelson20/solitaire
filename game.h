@@ -35,8 +35,6 @@ void display_win();
 #define CARD_KING 13
 #define CARD_NP 0
 
-#define DEFAULT_COLOR 0x61
-
 #define CARD_GRAPHICS_WIDTH 8
 #define CARD_GRAPHICS_HEIGHT 10
 

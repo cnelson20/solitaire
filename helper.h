@@ -12,5 +12,6 @@ unsigned char rand_byte();
 unsigned short rand_word();
 
 void clear_screen();
+void set_bg_screen();
 
 void enable_mouse();

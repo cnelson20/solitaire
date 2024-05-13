@@ -28,6 +28,9 @@ unsigned char cards_to_deal;
 unsigned char game_over;
 unsigned char victory;
 
+#define DEFAULT_BG_COLOR 0x6
+unsigned char default_color = (DEFAULT_BG_COLOR << 4) | 0x1;
+
 void main() {
 	setup_video();
 	
@@ -423,6 +426,10 @@ void setup_video() {
 		POKE(0x9F23, last4_char_updates[i]);
 	}
 	
+	POKEW(0x9F20, 0xFA00 + (5 * 2));
+	POKE(0x9F23, 0x61);
+	POKE(0x9F23, 0x0);
+	
 	enable_mouse();
 	
 	clear_screen();
@@ -508,7 +515,7 @@ void clear_rect(unsigned char x1, unsigned char y1, unsigned char x2, unsigned c
 		POKE(0x9F20, xoff);
 		for (i = 0; i < times; ++i) {
 			POKE(0x9F23, 0x20);
-			POKE(0x9F23, DEFAULT_COLOR);
+			POKE(0x9F23, default_color);
 		}
 		__asm__ ("inc $9F21");
 	}
@@ -519,7 +526,7 @@ void draw_line(unsigned char *graphics) {
 	
 	for (i = 0; i < CARD_GRAPHICS_WIDTH; ++i) {
 		POKE(0x9F23, graphics[i]);
-		POKE(0x9F23, DEFAULT_COLOR);
+		POKE(0x9F23, default_color);
 	}
 	__asm__ ("inc $9F21");
 }
@@ -574,7 +581,7 @@ void draw_front_line(unsigned char card, unsigned char *line) {
 	scolor = get_card_color(card);
 	
 	POKE(0x9F23, 0xF5);
-	POKE(0x9F23, DEFAULT_COLOR);
+	POKE(0x9F23, default_color);
 	
 	scolor = (scolor & 0xf) | 0x10;
 	
@@ -592,9 +599,9 @@ void draw_front_line(unsigned char card, unsigned char *line) {
 	}
 	
 	POKE(0x9F23, 0xF6);
-	POKE(0x9F23, DEFAULT_COLOR);
+	POKE(0x9F23, default_color);
 	POKE(0x9F23, 0x20);
-	POKE(0x9F23, DEFAULT_COLOR);
+	POKE(0x9F23, default_color);
 	__asm__ ("inc $9F21");
 }
 
@@ -761,7 +768,7 @@ void poke_str(char *str) {
 		c = *str;
 		if (c >= 'A') { c -= 0x40; }
 		POKE(0x9F23, c);
-		POKE(0x9F23, DEFAULT_COLOR);
+		POKE(0x9F23, default_color);
 		
 		++str;
 	}
@@ -788,7 +795,8 @@ void prompt_difficulty() {
 	poke_str(harder_string);
 	
 	do {
-		unsigned char key_pressed = cbm_k_getin();
+		static unsigned char key_pressed;
+		key_pressed = cbm_k_getin();
 		
 		if (key_pressed == '1') {
 			cards_to_deal = 1;
@@ -796,7 +804,13 @@ void prompt_difficulty() {
 		} else if (key_pressed == '3') {
 			cards_to_deal = 3;
 			break;
-		}	
+		} else if (key_pressed == 'G') {
+			default_color = (COLOR_GREEN << 4) | COLOR_WHITE;
+			set_bg_screen();
+		} else if (key_pressed == 'B') {
+			default_color = (COLOR_BLUE << 4) | COLOR_WHITE;
+			set_bg_screen();
+		}
 	} while (1);
 	
 	clear_screen();
