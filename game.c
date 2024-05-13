@@ -289,6 +289,9 @@ unsigned char *find_selection() {
 						if (tile_val != 0x20 && (tile_y >= PILES_Y_OFFSET + (facedown_pile_size << 1))) {
 							unsigned char j = (tile_y - PILES_Y_OFFSET - (facedown_pile_size << 1)) >> 1;
 							if (j >= pile_size) { j = pile_size - 1; }
+							if (selected_card != NULL && j != pile_size - 1) {
+								return NULL;
+							}
 							return & ( faceup_piles[pile_num][j] );
 						}
 					} 
