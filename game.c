@@ -202,7 +202,7 @@ void parse_mouse_mvmt() {
 				--deck_pile_size;
 			}
 		}
-		if (selected_card >= scratch_pile && selected_card < (scratch_pile + scratch_pile_size)) {
+		if (selected_card >= scratch_pile && selected_card < (scratch_pile + sizeof(scratch_pile))) {
 			// deselect cards
 			selected_card = NULL;
 			draw_selected_card();
@@ -743,7 +743,7 @@ void display_piles() {
 		} else {
 			pile_ind = PEEK(0x9F21);
 		}
-		clear_rect(vera_x_offset, pile_ind, vera_x_offset + CARD_GRAPHICS_WIDTH, DECK_Y_OFFSET);
+		clear_rect(vera_x_offset, pile_ind, vera_x_offset + CARD_GRAPHICS_WIDTH, PILES_Y_END + (pile_num << 1));
 		
 	}
 	// Draw deck, scratch pile, selected card
