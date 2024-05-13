@@ -743,7 +743,7 @@ void display_piles() {
 		} else {
 			pile_ind = PEEK(0x9F21);
 		}
-		clear_rect(vera_x_offset, pile_ind, vera_x_offset + CARD_GRAPHICS_WIDTH, PILES_Y_END);
+		clear_rect(vera_x_offset, pile_ind, vera_x_offset + CARD_GRAPHICS_WIDTH, DECK_Y_OFFSET);
 		
 	}
 	// Draw deck, scratch pile, selected card
