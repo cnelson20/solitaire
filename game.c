@@ -784,16 +784,34 @@ char easy_string[] = "PRESS 1 TO DEAL 1 CARD AT A TIME";
 char harder_string[] = "PRESS 3 TO DEAL 3 AT A TIME";
 #define HARDER_STRLEN (sizeof(harder_string) - 1)
 
+char control_strings[][32] = {
+	"CONTROLS:",
+	"LEFT CLICK - SELECT",
+	"RIGHT CLICK - DESELECT",
+	"ESC - NEW GAME",
+};
+#define CONTROL_STRINGS_LEN 4
+
 void prompt_difficulty() {
+	unsigned char i;
+
 	POKE(0x9F22, 0x10);
-	POKE(0x9F21, 29);
+	POKE(0x9F21, 21);
 	POKE(0x9F20, center_str_offset(EASY_STRLEN));
 	poke_str(easy_string);
 	
-	POKE(0x9F21, 31);
+	POKE(0x9F21, 23);
 	POKE(0x9F20, center_str_offset(EASY_STRLEN));
 	poke_str(harder_string);
 	
+	POKE(0x9F21, 31);
+	for (i = 0; i < CONTROL_STRINGS_LEN; ++i) {
+		POKE(0x9F20, 24 << 1);
+		poke_str(control_strings[i]);
+
+		POKE(0x9F21, 2 + PEEK(0x9F21));
+	}
+
 	do {
 		static unsigned char key_pressed;
 		key_pressed = cbm_k_getin();
